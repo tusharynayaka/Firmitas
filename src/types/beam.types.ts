@@ -2,7 +2,7 @@ export type SupportType = 'pin' | 'roller' | 'fixed' | 'free';
 
 export interface BeamSupport {
   id: string;
-  x: number;
+  x: number | '';
   type: SupportType;
 }
 
@@ -11,10 +11,10 @@ export type LoadType = 'point' | 'distributed' | 'moment';
 export interface BeamLoad {
   id: string;
   type: LoadType;
-  x: number;
-  endX?: number;
-  magnitude: number; 
-  endMagnitude?: number; 
+  x: number | '';
+  endX?: number | '';
+  magnitude: number | ''; 
+  endMagnitude?: number | ''; 
 }
 
 export interface BeamMaterial {
@@ -23,7 +23,7 @@ export interface BeamMaterial {
 }
 
 export interface BeamConfig {
-  length: number;
+  length: number | '';
   supports: BeamSupport[];
   loads: BeamLoad[];
   material: BeamMaterial;

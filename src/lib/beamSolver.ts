@@ -3,9 +3,11 @@ import type { BeamConfig, BeamResult, BeamPointData, BeamSupport, SupportType } 
 
 export function solveBeam(config: BeamConfig, numElements: number = 100): BeamResult | null {
   try {
-    const { length, supports, loads, material } = config;
+    const { supports, loads, material } = config;
     const { E, I } = material;
     
+    const length = Number(config.length) || 0.1;
+
     // EI
     const EI = E * I;
     
@@ -41,22 +43,24 @@ export function solveBeam(config: BeamConfig, numElements: number = 100): BeamRe
     // Handle specific loads
     // Point loads / moments
     loads.filter(l => l.type === 'point' || l.type === 'moment').forEach(load => {
+        const x = Number(load.x) || 0;
+        const mag = Number(load.magnitude) || 0;
         // Find closest node
-        let closestNode = Math.round((load.x / length) * numElements);
+        let closestNode = Math.round((x / length) * numElements);
         closestNode = Math.max(0, Math.min(numNodes - 1, closestNode));
         if (load.type === 'point') {
-            F[2 * closestNode] += load.magnitude; // magnitude > 0 is up.
+            F[2 * closestNode] += mag; // magnitude > 0 is up.
         } else if (load.type === 'moment') {
-            F[2 * closestNode + 1] += load.magnitude; // CCW is positive
+            F[2 * closestNode + 1] += mag; // CCW is positive
         }
     });
     
     // Distributed loads
     loads.filter(l => l.type === 'distributed').forEach(load => {
-        const startX = load.x;
-        const endX = load.endX!;
-        const qStart = load.magnitude;
-        const qEnd = load.endMagnitude ?? load.magnitude;
+        const startX = Number(load.x) || 0;
+        const endX = Number(load.endX || startX);
+        const qStart = Number(load.magnitude) || 0;
+        const qEnd = load.endMagnitude !== undefined && load.endMagnitude !== '' ? Number(load.endMagnitude) : qStart;
         
         // Loop over elements, check if element intersects load
         for (let i = 0; i < numElements; i++) {
@@ -100,7 +104,8 @@ export function solveBeam(config: BeamConfig, numElements: number = 100): BeamRe
     const nodeSupports = new Map<number, SupportType>();
     
     supports.forEach(sup => {
-        let closestNode = Math.round((sup.x / length) * numElements);
+        const supX = Number(sup.x) || 0;
+        let closestNode = Math.round((supX / length) * numElements);
         closestNode = Math.max(0, Math.min(numNodes - 1, closestNode));
         nodeSupports.set(closestNode, sup.type);
         

@@ -115,29 +115,63 @@ export const BeamPreview: React.FC<BeamPreviewProps> = ({ config }) => {
             }
 
             if (load.type === 'distributed') {
-              const ex = padX + Math.min(config.length, load.endX || config.length) * scale;
-              const width = Math.max(5, ex - sx);
-              const boxY = beamY - 50;
-              const boxH = 50 - bH / 2;
+              const loadX = Number(load.x) || 0;
+              const endX = Number(load.endX) || loadX;
+              const sx = padX + (loadX * scale);
+              const ex = padX + Math.min(Number(config.length) || 1, endX || (Number(config.length) || 1)) * scale;
+              const width = Math.max(2, ex - sx);
+              
+              const mag1 = Number(load.magnitude) || 0;
+              const mag2 = (load.endMagnitude !== undefined && load.endMagnitude !== '') ? Number(load.endMagnitude) : mag1;
+              
+              const maxMag = Math.max(0.1, Math.abs(mag1), Math.abs(mag2));
+              const h1 = (Math.abs(mag1) / maxMag) * 40;
+              const h2 = (Math.abs(mag2) / maxMag) * 40;
+              
+              const isUp1 = mag1 > 0;
+              const isUp2 = mag2 > 0;
+              
+              const yTop = beamY - bH / 2 - 2;
+              const yBot = beamY + bH / 2 + 2;
+              
+              const yBase1 = isUp1 ? yBot : yTop;
+              const yEnd1 = isUp1 ? yBot + h1 : yTop - h1;
+              
+              const yBase2 = isUp2 ? yBot : yTop;
+              const yEnd2 = isUp2 ? yBot + h2 : yTop - h2;
 
-              // Draw multiple nested arrows indicating uniform load
+              const points = `${sx},${yBase1} ${sx},${yEnd1} ${ex},${yEnd2} ${ex},${yBase2}`;
+
               const arrows = [];
-              const numArrows = Math.max(2, Math.floor(width / 25));
+              const numArrows = Math.max(2, Math.floor(width / 20));
               const step = width / numArrows;
+              
               for (let i = 0; i <= numArrows; i++) {
                 const cx = sx + i * step;
+                const t = numArrows === 0 ? 0 : i / numArrows;
+                const magT = mag1 + t * (mag2 - mag1);
+                
+                if (Math.abs(magT) < 0.1) continue;
+                
+                const isUpT = magT > 0;
+                const hT = (Math.abs(magT) / maxMag) * 40;
+                const yBT = isUpT ? yBot : yTop;
+                const yET = isUpT ? yBot + hT : yTop - hT;
+                
                 arrows.push(
-                  <line key={i} x1={cx} y1={boxY} x2={cx} y2={beamY - bH / 2 - 2} stroke="#ef4444" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                  <line key={i} x1={cx} y1={yET} x2={cx} y2={yBT} stroke="#ef4444" strokeWidth="1.5" markerEnd="url(#arrow)" />
                 );
               }
 
               return (
                 <g key={load.id}>
-                  <rect x={sx} y={boxY} width={width} height={boxH} fill="#fee2e2" opacity="0.4" stroke="none" />
-                  <line x1={sx} y1={boxY} x2={ex} y2={boxY} stroke="#ef4444" strokeWidth="2" />
+                  <polygon points={points} fill="#fee2e2" opacity="0.4" stroke="#ef4444" strokeWidth="1" />
                   {arrows}
-                  <text x={sx + width / 2} y={boxY - 8} textAnchor="middle" fill="#ef4444" fontSize="13" fontWeight="bold">
-                    {mag} kN/m
+                  <text x={sx} y={mag1 > 0 ? yEnd1 + 15 : yEnd1 - 5} textAnchor="middle" fill="#ef4444" fontSize="11" fontWeight="bold">
+                    {mag1}
+                  </text>
+                  <text x={ex} y={mag2 > 0 ? yEnd2 + 15 : yEnd2 - 5} textAnchor="middle" fill="#ef4444" fontSize="11" fontWeight="bold">
+                    {mag2}
                   </text>
                 </g>
               );

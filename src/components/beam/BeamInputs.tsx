@@ -51,7 +51,7 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
                 <input 
                     type="number" 
                     value={config.length} 
-                    onChange={e => onChange({ length: Math.max(0.1, Number(e.target.value)) })}
+                    onChange={e => onChange({ length: e.target.value === '' ? '' : Math.max(0.1, Number(e.target.value)) })}
                     className="flex-1 rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border"
                     min="0.1" step="any"
                 />
@@ -87,7 +87,7 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
                                     type="number" 
                                     className="w-full text-sm border-slate-300 rounded focus:ring-indigo-500 p-1.5 border pr-6" 
                                     value={supp.x} 
-                                    onChange={e => updateSupport(supp.id, { x: Number(e.target.value) })}
+                                    onChange={e => updateSupport(supp.id, { x: e.target.value === '' ? '' : Number(e.target.value) })}
                                 />
                                 <span className="absolute right-2 top-1.5 text-xs text-slate-400">m</span>
                             </div>
@@ -122,7 +122,11 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
                                     value={load.type}
                                     onChange={e => {
                                         const type = e.target.value as LoadType;
-                                        updateLoad(load.id, { type, endX: type === 'distributed' ? Math.min(config.length, load.x + 2) : undefined });
+                                        updateLoad(load.id, { 
+                                            type, 
+                                            endX: type === 'distributed' ? Math.min(Number(config.length) || 1, (Number(load.x) || 0) + 2) : undefined,
+                                            endMagnitude: type === 'distributed' ? load.magnitude : undefined
+                                        });
                                     }}
                                 >
                                     <option value="point">Point Load</option>
@@ -134,7 +138,7 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
                             <div>
                                 <label className="text-xs text-slate-500 block mb-1">Position {load.type === 'distributed' && '(Start)'}</label>
                                 <div className="relative">
-                                    <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-6" value={load.x} onChange={e => updateLoad(load.id, { x: Number(e.target.value) })}/>
+                                    <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-6" value={load.x} onChange={e => updateLoad(load.id, { x: e.target.value === '' ? '' : Number(e.target.value) })}/>
                                     <span className="absolute right-2 top-1.5 text-xs text-slate-400">m</span>
                                 </div>
                             </div>
@@ -143,7 +147,7 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
                                 <div>
                                     <label className="text-xs text-slate-500 block mb-1">Position (End)</label>
                                     <div className="relative">
-                                        <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-6" value={load.endX || 0} onChange={e => updateLoad(load.id, { endX: Number(e.target.value) })}/>
+                                        <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-6" value={load.endX === undefined ? '' : load.endX} onChange={e => updateLoad(load.id, { endX: e.target.value === '' ? '' : Number(e.target.value) })}/>
                                         <span className="absolute right-2 top-1.5 text-xs text-slate-400">m</span>
                                     </div>
                                 </div>
@@ -152,7 +156,7 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
                             <div>
                                 <label className="text-xs text-slate-500 block mb-1">Magnitude {load.type === 'distributed' && '(Start)'}</label>
                                 <div className="relative">
-                                    <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-8" value={load.magnitude} onChange={e => updateLoad(load.id, { magnitude: Number(e.target.value) })}/>
+                                    <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-8" value={load.magnitude} onChange={e => updateLoad(load.id, { magnitude: e.target.value === '' ? '' : Number(e.target.value) })}/>
                                     <span className="absolute right-2 top-1.5 text-xs text-slate-400">{load.type === 'moment' ? 'kNm' : 'kN'}</span>
                                 </div>
                             </div>
@@ -161,7 +165,7 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
                                 <div>
                                     <label className="text-xs text-slate-500 block mb-1">Magnitude (End)</label>
                                     <div className="relative">
-                                        <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-8" value={load.endMagnitude ?? load.magnitude} onChange={e => updateLoad(load.id, { endMagnitude: Number(e.target.value) })}/>
+                                        <input type="number" className="w-full text-sm border-slate-300 rounded p-1.5 border pr-8" value={load.endMagnitude === undefined ? load.magnitude : load.endMagnitude} onChange={e => updateLoad(load.id, { endMagnitude: e.target.value === '' ? '' : Number(e.target.value) })}/>
                                         <span className="absolute right-2 top-1.5 text-xs text-slate-400">kN/m</span>
                                     </div>
                                 </div>
@@ -175,20 +179,14 @@ export const BeamInputs: React.FC<BeamInputsProps> = ({ config, onChange }) => {
 
         <div className="flex gap-2">
             <button 
-                onClick={() => onChange({ supports: [], loads: [] })}
-                className="flex-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium py-2 px-4 rounded-md transition-colors text-sm"
-            >
-                Clear All
-            </button>
-            <button 
                 onClick={() => onChange({ 
                     length: 12, 
                     supports: [{ id: uuidv4(), x: 0, type: 'fixed' }], 
                     loads: [{ id: uuidv4(), type: 'distributed', x: 0, endX: 12, magnitude: -5 }]
                 })}
-                className="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium py-2 px-4 rounded-md transition-colors text-sm"
+                className="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium py-2 px-4 rounded-md transition-colors text-sm"
             >
-                Cantilever Example
+                Load Cantilever Example
             </button>
         </div>
       </div>
