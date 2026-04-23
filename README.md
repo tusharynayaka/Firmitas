@@ -1,20 +1,67 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+Here is the raw Markdown code for your **Firmitas** README. You can copy and paste this directly into your `README.md` file.
 
-# Run and deploy your AI Studio app
+```markdown
+# 🏛️ Firmitas
 
-This contains everything you need to run your app locally.
+### *Structural analysis for beam & truss calculations*
 
-View your app in AI Studio: https://ai.studio/apps/a181846c-0297-47d8-88be-10a338633741
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Run Locally
+---
 
-**Prerequisites:**  Node.js
+## ✨ Features
 
+- **Beam Calculator** – Reactions, shear, moment, deflection, stress
+- **Truss Calculator** – Axial forces, tension/compression visualization
+- **Export options** – PNG/CSV exports, Dark mode support, and Save/Load configurations
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+
+## 🚀 Quick Start
+
+```bash
+# Clone the repository
+git clone [https://github.com/yourusername/firmitas.git](https://github.com/yourusername/firmitas.git)
+
+# Enter the directory
+cd firmitas
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+---
+
+## 🛠️ Built With
+
+* **React** - UI Framework
+* **TypeScript** - Type Safety
+* **Tailwind CSS** - Styling
+* **Math.js** - Numerical Computation
+* **Vite** - Build Tool
+
+---
+
+## 📁 Structure
+
+```text
+src/
+├── beam/        # Beam solver logic & UI components
+├── truss/       # Truss solver logic & UI components
+├── common/      # Shared UI components & hooks
+└── types/       # Global TypeScript definitions
+```
+
+---
+
+## 📄 License
+
+MIT © Tushar Y Nayaka
+
+---
+
+**Live Demo:** [https://firmitas.vercel.app/](https://firmitas.vercel.app/)
+```
