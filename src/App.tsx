@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Navbar } from './components/common/Navbar';
 import { BeamCalculator } from './components/beam/BeamCalculator';
 import { TrussCalculator } from './components/truss/TrussCalculator';
@@ -31,6 +32,7 @@ export default function App() {
            <p>For educational and preliminary design use only. Verify all results with secondary methods. <br/>Not intended to replace certified engineering software.</p>
         </div>
       </footer>
+      <Analytics />
     </div>
   );
 }
