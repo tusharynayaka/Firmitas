@@ -22,7 +22,7 @@ export const BeamDiagrams: React.FC<BeamDiagramsProps> = ({ config, result }) =>
           <p className="font-semibold text-white mb-1">Position: {label} m</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color }}>
-              {entry.name}: {entry.value.toExponential(3)} {entry.dataKey === 'v' ? 'kN' : entry.dataKey === 'm' ? 'kNm' : 'mm'}
+              {entry.name}: {Number(entry.value.toFixed(2))} {entry.dataKey === 'v' ? 'kN' : entry.dataKey === 'm' ? 'kNm' : 'mm'}
             </p>
           ))}
         </div>
@@ -39,8 +39,8 @@ export const BeamDiagrams: React.FC<BeamDiagramsProps> = ({ config, result }) =>
             {result.reactions.map((r, i) => (
                 <div key={i} className="bg-slate-50 p-3 rounded-lg border border-slate-200">
                     <p className="text-xs text-slate-500 font-medium">Support at {r.x.toFixed(2)}m</p>
-                    <p className="text-sm font-semibold text-slate-800">Ry: {r.R.toExponential(3)} kN</p>
-                    {Math.abs(r.M) > 0 && <p className="text-sm font-semibold text-slate-800">M: {r.M.toExponential(3)} kNm</p>}
+                    <p className="text-sm font-semibold text-slate-800">Ry: {Number(r.R.toFixed(2))} kN</p>
+                    {Math.abs(r.M) > 1e-4 && <p className="text-sm font-semibold text-slate-800">M: {Number(r.M.toFixed(2))} kNm</p>}
                 </div>
             ))}
         </div>
@@ -53,7 +53,7 @@ export const BeamDiagrams: React.FC<BeamDiagramsProps> = ({ config, result }) =>
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="x" type="number" domain={[0, config.length]} tick={{fontSize: 10, fill: '#64748b'}} />
-              <YAxis tick={{fontSize: 10, fill: '#64748b'}} tickFormatter={v => v.toExponential(1)}/>
+              <YAxis tick={{fontSize: 10, fill: '#64748b'}} tickFormatter={v => Number(v.toFixed(2)).toString()}/>
               <Tooltip content={<CustomTooltip />} />
               <ReferenceLine y={0} stroke="#94a3b8" />
               <Area type="monotone" dataKey="v" name="Shear" stroke="#3b82f6" fillOpacity={0.2} fill="#3b82f6" isAnimationActive={false} />
@@ -70,10 +70,8 @@ export const BeamDiagrams: React.FC<BeamDiagramsProps> = ({ config, result }) =>
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="x" type="number" domain={[0, config.length]} tick={{fontSize: 10, fill: '#64748b'}} />
-              <YAxis tick={{fontSize: 10, fill: '#64748b'}} tickFormatter={v => v.toExponential(1)} />
+              <YAxis tick={{fontSize: 10, fill: '#64748b'}} tickFormatter={v => Number(v.toFixed(2)).toString()} />
               <Tooltip content={<CustomTooltip />} />
-              <ReferenceLine y={0} stroke="#94a3b8" />
-              {/* In engineering, moment diagrams are often drawn on the tension side (flipped). We'll keep standard math plotting for now */}
               <Area type="step" dataKey="m" name="Moment" stroke="#ef4444" fillOpacity={0.2} fill="#ef4444" isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
@@ -88,10 +86,8 @@ export const BeamDiagrams: React.FC<BeamDiagramsProps> = ({ config, result }) =>
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="x" type="number" domain={[0, config.length]} tick={{fontSize: 10, fill: '#64748b'}} />
-              <YAxis tick={{fontSize: 10, fill: '#64748b'}} tickFormatter={v => v.toExponential(1)} />
+              <YAxis tick={{fontSize: 10, fill: '#64748b'}} tickFormatter={v => Number(v.toFixed(3)).toString()} />
               <Tooltip content={<CustomTooltip />} />
-              <ReferenceLine y={0} stroke="#94a3b8" />
-              <Area type="monotone" dataKey="d" name="Deflection" stroke="#10b981" fillOpacity={0} strokeWidth={2} strokeDasharray="5 5" isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

@@ -162,7 +162,7 @@ export function solveBeam(config: BeamConfig, numElements: number = 100): BeamRe
         reactions.push({
             x: node * L_el,
             R: Math.abs(reactF[2 * node]) > 1e-6 ? reactF[2 * node] : 0,
-            M: Math.abs(reactF[2 * node + 1]) > 1e-6 ? reactF[2 * node + 1] : 0,
+            M: Math.abs(reactF[2 * node + 1]) > 1e-6 ? -reactF[2 * node + 1] : 0,
         });
     });
 
