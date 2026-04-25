@@ -1,20 +1,32 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
 
-# Run and deploy your AI Studio app
+# 🏛️ Firmitas
 
-This contains everything you need to run your app locally.
+## ✨ Features
 
-View your app in AI Studio: https://ai.studio/apps/a181846c-0297-47d8-88be-10a338633741
+Firmitas is designed for civil and mechanical engineers to perform rapid structural validation.
 
-## Run Locally
+* **📏 Beam Calculator** – Compute reactions, shear force diagrams (SFD), bending moment diagrams (BMD), deflection, and peak stress.
+* **🏗️ Truss Calculator** – Solve complex trusses using the method of joints/sections. Features real-time tension and compression visualization.
+* **💾 Data Management** – Save and load project configurations locally.
+* **📊 Export Ready** – Export high-resolution diagrams to PNG or raw data to CSV for reports.
+* **🌗 Adaptive UI** – Full dark mode support for late-night design sessions.
 
-**Prerequisites:**  Node.js
+---
 
+## 🚀 Quick Start
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Get your local development environment running in seconds:
+
+```bash
+# Clone the repository
+git clone [https://github.com/yourusername/firmitas.git](https://github.com/yourusername/firmitas.git)
+
+# Enter the directory
+cd firmitas
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
