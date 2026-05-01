@@ -1,4 +1,3 @@
-name: Firmitas
 description: |
   # Firmitas
   **Structural Analysis Suite for Modern Engineering**
