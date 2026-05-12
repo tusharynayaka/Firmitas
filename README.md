@@ -1,5 +1,4 @@
-description: |
-  # Firmitas
+# Firmitas
   **Structural Analysis Suite for Modern Engineering**
 
   ## Overview
